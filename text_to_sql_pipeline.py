@@ -27,7 +27,7 @@ class Pipeline:
             **{
                 "pipelines": ["*"],                                                           # Connect to all pipelines
                 "DB_HOST": os.getenv("DB_HOST", "http://localhost"),                     # Database hostname
-                "DB_PORT": self._parse_port(os.getenv("DB_PORT", "5432")),                # Convert DB_PORT to integer safely
+                "DB_PORT": os.getenv("DB_PORT", 5432),                # Convert DB_PORT to integer safely
                 "DB_USER": os.getenv("DB_USER", "postgres"),                                  # User to connect to the database with
                 "DB_PASSWORD": os.getenv("DB_PASSWORD", "password"),                          # Password to connect to the database with
                 "DB_DATABASE": os.getenv("DB_DATABASE", "postgres"),                          # Database to select on the DB instance
@@ -37,13 +37,6 @@ class Pipeline:
             }
         )
 
-    def _parse_port(self, port_value: str) -> int:
-        try:
-            port = int(port_value)
-            if port < 1 or port > 65535:
-                raise ValueError("Port must be between 1 and 65535")
-            return port
-        except ValueError:
             # Log the error or handle it as needed
             print(f"Invalid port value: {port_value}. Defaulting to 5432.")
             return 5432
