@@ -39,7 +39,7 @@ class Pipeline:
         self.valves = self.Valves(
             **{
                 "pipelines": ["*"],                                                           # Connect to all pipelines
-                "DB_HOST": os.getenv("DB_HOST", "http://localhost"),                     # Database hostname
+                "DB_HOST": os.getenv("DB_HOST", "http://host.docker.internal"),                     # Database hostname
                 "DB_PORT": os.getenv("DB_PORT", "5432"),                                        # Database port 
                 "DB_USER": os.getenv("DB_USER", "postgres"),                                  # User to connect to the database with
                 "DB_PASSWORD": os.getenv("DB_PASSWORD", "qwer5678"),                          # Password to connect to the database with
