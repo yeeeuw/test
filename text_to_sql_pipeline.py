@@ -1,15 +1,18 @@
+
+
 from typing import List, Union, Generator, Iterator
-import os
+import os 
 from pydantic import BaseModel
 from llama_index.llms.ollama import Ollama
 from llama_index.core.query_engine import NLSQLTableQueryEngine
 from llama_index.core import SQLDatabase, PromptTemplate
 from sqlalchemy import create_engine
 
+
 class Pipeline:
     class Valves(BaseModel):
         DB_HOST: str
-        DB_PORT: int
+        DB_PORT: str
         DB_USER: str
         DB_PASSWORD: str        
         DB_DATABASE: str
@@ -17,6 +20,8 @@ class Pipeline:
         OLLAMA_HOST: str
         TEXT_TO_SQL_MODEL: str 
 
+
+    # Update valves/ environment variables based on your selected database 
     def __init__(self):
         self.name = "Database RAG Pipeline"
         self.engine = None
@@ -26,20 +31,16 @@ class Pipeline:
         self.valves = self.Valves(
             **{
                 "pipelines": ["*"],                                                           # Connect to all pipelines
-                "DB_HOST": "http://host.docker.internal",                     # Database hostname
-                "DB_PORT": 5432,                # Convert DB_PORT to integer safely
+                "DB_HOST": "http://localhost",                     # Database hostname
+                "DB_PORT": "5432",                                        # Database port 
                 "DB_USER": "postgres",                                  # User to connect to the database with
-                "DB_PASSWORD": "qwer5678",                          # Password to connect to the database with
-                "DB_DATABASE": "testdb",                          # Database to select on the DB instance
-                "DB_TABLE": "actor",                            # Table(s) to run queries against 
+                "DB_PASSWORD": "password",                          # Password to connect to the database with
+                "DB_DATABASE": "postgres",                          # Database to select on the DB instance
+                "DB_TABLE": os.getenv("DB_TABLE", "table_name"),                            # Table(s) to run queries against 
                 "OLLAMA_HOST": "http://host.docker.internal:11434", # Make sure to update with the URL of your Ollama host, such as http://localhost:11434 or remote server address
                 "TEXT_TO_SQL_MODEL": "llama3.1:latest"            # Model to use for text-to-SQL generation      
             }
         )
-
-            # Log the error or handle it as needed
-            print(f"Invalid port value: {port_value}. Defaulting to 5432.")
-            return 5432
 
     def init_db_connection(self):
         # Update your DB connection string based on selected DB engine - current connection string is for Postgres
