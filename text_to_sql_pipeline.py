@@ -1,3 +1,13 @@
+"""
+title: Llama Index DB Pipeline
+author: 0xThresh
+date: 2024-08-11
+version: 1.1
+license: MIT
+description: A pipeline for using text-to-SQL for retrieving relevant information from a database using the Llama Index library.
+requirements: llama_index, sqlalchemy, psycopg2-binary
+"""
+
 from typing import List, Union, Generator, Iterator
 import os 
 from pydantic import BaseModel
@@ -29,12 +39,12 @@ class Pipeline:
         self.valves = self.Valves(
             **{
                 "pipelines": ["*"],                                                           # Connect to all pipelines
-                "DB_HOST": os.getenv("DB_HOST", "http://host.docker.internal"),                     # Database hostname
-                "DB_PORT": os.getenv("DB_PORT", "5432"),                                        # Database port 
+                "DB_HOST": os.getenv("DB_HOST", "http://localhost"),                     # Database hostname
+                "DB_PORT": os.getenv("DB_PORT", 5432),                                        # Database port 
                 "DB_USER": os.getenv("DB_USER", "postgres"),                                  # User to connect to the database with
-                "DB_PASSWORD": os.getenv("DB_PASSWORD", "qwer5678"),                          # Password to connect to the database with
-                "DB_DATABASE": os.getenv("DB_DATABASE", "testdb"),                          # Database to select on the DB instance
-                "DB_TABLE": os.getenv("DB_TABLE", "actor"),                            # Table(s) to run queries against 
+                "DB_PASSWORD": os.getenv("DB_PASSWORD", "password"),                          # Password to connect to the database with
+                "DB_DATABASE": os.getenv("DB_DATABASE", "postgres"),                          # Database to select on the DB instance
+                "DB_TABLE": os.getenv("DB_TABLE", "table_name"),                            # Table(s) to run queries against 
                 "OLLAMA_HOST": os.getenv("OLLAMA_HOST", "http://host.docker.internal:11434"), # Make sure to update with the URL of your Ollama host, such as http://localhost:11434 or remote server address
                 "TEXT_TO_SQL_MODEL": os.getenv("TEXT_TO_SQL_MODEL", "llama3.1:latest")            # Model to use for text-to-SQL generation      
             }
@@ -42,7 +52,7 @@ class Pipeline:
 
     def init_db_connection(self):
         # Update your DB connection string based on selected DB engine - current connection string is for Postgres
-        self.engine = create_engine("postgresql+psycopg2://postgres:qwer5678@host.docker.internal:5432/testdb")
+        self.engine = create_engine(f"postgresql+psycopg2://{self.valves.DB_USER}:{self.valves.DB_PASSWORD}@{self.valves.DB_HOST}:{self.valves.DB_PORT}/{self.valves.DB_DATABASE}")
         return self.engine
 
     async def on_startup(self):
@@ -72,7 +82,6 @@ class Pipeline:
         Never query for all the columns from a specific table, only ask for a few relevant columns given the question.
         You should use DISTINCT statements and avoid returning duplicates wherever possible.
         Pay attention to use only the column names that you can see in the schema description. Be careful to not query for columns that do not exist. Pay attention to which column is in which table. Also, qualify column names with the table name when needed. You are required to use the following format, each taking one line:
-
 
         Question: Question here
         SQLQuery: SQL Query to run
