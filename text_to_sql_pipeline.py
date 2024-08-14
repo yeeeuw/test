@@ -1,26 +1,15 @@
-"""
-title: Llama Index DB Pipeline
-author: 0xThresh
-date: 2024-08-11
-version: 1.1
-license: MIT
-description: A pipeline for using text-to-SQL for retrieving relevant information from a database using the Llama Index library.
-requirements: llama_index, sqlalchemy, psycopg2-binary
-"""
-
 from typing import List, Union, Generator, Iterator
-import os 
+import os
 from pydantic import BaseModel
 from llama_index.llms.ollama import Ollama
 from llama_index.core.query_engine import NLSQLTableQueryEngine
 from llama_index.core import SQLDatabase, PromptTemplate
 from sqlalchemy import create_engine
 
-
 class Pipeline:
     class Valves(BaseModel):
         DB_HOST: str
-        DB_PORT: str
+        DB_PORT: int
         DB_USER: str
         DB_PASSWORD: str        
         DB_DATABASE: str
@@ -28,8 +17,6 @@ class Pipeline:
         OLLAMA_HOST: str
         TEXT_TO_SQL_MODEL: str 
 
-
-    # Update valves/ environment variables based on your selected database 
     def __init__(self):
         self.name = "Database RAG Pipeline"
         self.engine = None
@@ -40,7 +27,7 @@ class Pipeline:
             **{
                 "pipelines": ["*"],                                                           # Connect to all pipelines
                 "DB_HOST": os.getenv("DB_HOST", "http://localhost"),                     # Database hostname
-                "DB_PORT": os.getenv("DB_PORT", "5432"),                                        # Database port 
+                "DB_PORT": self._parse_port(os.getenv("DB_PORT", "5432")),                # Convert DB_PORT to integer safely
                 "DB_USER": os.getenv("DB_USER", "postgres"),                                  # User to connect to the database with
                 "DB_PASSWORD": os.getenv("DB_PASSWORD", "password"),                          # Password to connect to the database with
                 "DB_DATABASE": os.getenv("DB_DATABASE", "postgres"),                          # Database to select on the DB instance
@@ -49,6 +36,17 @@ class Pipeline:
                 "TEXT_TO_SQL_MODEL": os.getenv("TEXT_TO_SQL_MODEL", "llama3.1:latest")            # Model to use for text-to-SQL generation      
             }
         )
+
+    def _parse_port(self, port_value: str) -> int:
+        try:
+            port = int(port_value)
+            if port < 1 or port > 65535:
+                raise ValueError("Port must be between 1 and 65535")
+            return port
+        except ValueError:
+            # Log the error or handle it as needed
+            print(f"Invalid port value: {port_value}. Defaulting to 5432.")
+            return 5432
 
     def init_db_connection(self):
         # Update your DB connection string based on selected DB engine - current connection string is for Postgres
