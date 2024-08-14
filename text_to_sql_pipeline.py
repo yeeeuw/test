@@ -42,7 +42,7 @@ class Pipeline:
 
     def init_db_connection(self):
         # Update your DB connection string based on selected DB engine - current connection string is for Postgres
-        self.engine = create_engine("postgresql+psycopg2://postgres:qwer5678@host.docker.internal:5432/testdb"
+        self.engine = create_engine("postgresql+psycopg2://postgres:qwer5678@host.docker.internal:5432/testdb")
         return self.engine
 
     async def on_startup(self):
