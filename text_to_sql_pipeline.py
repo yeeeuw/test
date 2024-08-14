@@ -36,7 +36,7 @@ class Pipeline:
                 "DB_DATABASE": os.getenv("DB_DATABASE", "testdb"),                          # Database to select on the DB instance
                 "DB_TABLE": os.getenv("DB_TABLE", "actor"),                            # Table(s) to run queries against 
                 "OLLAMA_HOST": os.getenv("OLLAMA_HOST", "http://host.docker.internal:11434"), # Make sure to update with the URL of your Ollama host, such as http://localhost:11434 or remote server address
-                "TEXT_TO_SQL_MODEL": os.getenv("TEXT_TO_SQL_MODEL", "llama2:latest")            # Model to use for text-to-SQL generation      
+                "TEXT_TO_SQL_MODEL": os.getenv("TEXT_TO_SQL_MODEL", "llama3.1:latest")            # Model to use for text-to-SQL generation      
             }
         )
 
