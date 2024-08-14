@@ -20,7 +20,7 @@ from sqlalchemy import create_engine
 class Pipeline:
     class Valves(BaseModel):
         DB_HOST: str
-        DB_PORT: int
+        DB_PORT: str
         DB_USER: str
         DB_PASSWORD: str        
         DB_DATABASE: str
