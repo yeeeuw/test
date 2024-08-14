@@ -26,14 +26,14 @@ class Pipeline:
         self.valves = self.Valves(
             **{
                 "pipelines": ["*"],                                                           # Connect to all pipelines
-                "DB_HOST": os.getenv("DB_HOST", "http://localhost"),                     # Database hostname
-                "DB_PORT": os.getenv("DB_PORT", 5432),                # Convert DB_PORT to integer safely
-                "DB_USER": os.getenv("DB_USER", "postgres"),                                  # User to connect to the database with
-                "DB_PASSWORD": os.getenv("DB_PASSWORD", "password"),                          # Password to connect to the database with
-                "DB_DATABASE": os.getenv("DB_DATABASE", "postgres"),                          # Database to select on the DB instance
-                "DB_TABLE": os.getenv("DB_TABLE", "table_name"),                            # Table(s) to run queries against 
-                "OLLAMA_HOST": os.getenv("OLLAMA_HOST", "http://host.docker.internal:11434"), # Make sure to update with the URL of your Ollama host, such as http://localhost:11434 or remote server address
-                "TEXT_TO_SQL_MODEL": os.getenv("TEXT_TO_SQL_MODEL", "llama3.1:latest")            # Model to use for text-to-SQL generation      
+                "DB_HOST": "http://host.docker.internal",                     # Database hostname
+                "DB_PORT": 5432,                # Convert DB_PORT to integer safely
+                "DB_USER": "postgres",                                  # User to connect to the database with
+                "DB_PASSWORD": "qwer5678",                          # Password to connect to the database with
+                "DB_DATABASE": "testdb",                          # Database to select on the DB instance
+                "DB_TABLE": "actor",                            # Table(s) to run queries against 
+                "OLLAMA_HOST": "http://host.docker.internal:11434", # Make sure to update with the URL of your Ollama host, such as http://localhost:11434 or remote server address
+                "TEXT_TO_SQL_MODEL": "llama3.1:latest"            # Model to use for text-to-SQL generation      
             }
         )
 
