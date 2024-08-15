@@ -40,7 +40,7 @@ class Pipeline:
             **{
                 "pipelines": ["*"],                                                           # Connect to all pipelines
                 "DB_HOST": os.getenv("DB_HOST", "http://localhost"),                     # Database hostname
-                "DB_PORT": os.getenv("DB_PORT", 5432),                                        # Database port 
+                "DB_PORT": os.getenv("DB_PORT", "5432"),                                        # Database port 
                 "DB_USER": os.getenv("DB_USER", "postgres"),                                  # User to connect to the database with
                 "DB_PASSWORD": os.getenv("DB_PASSWORD", "password"),                          # Password to connect to the database with
                 "DB_DATABASE": os.getenv("DB_DATABASE", "postgres"),                          # Database to select on the DB instance
@@ -52,7 +52,7 @@ class Pipeline:
 
     def init_db_connection(self):
         # Update your DB connection string based on selected DB engine - current connection string is for Postgres
-        self.engine = create_engine(f"postgresql+psycopg2://{self.valves.DB_USER}:{self.valves.DB_PASSWORD}@{self.valves.DB_HOST}:{self.valves.DB_PORT}/{self.valves.DB_DATABASE}")
+        self.engine = create_engine(f"postgresql+psycopg2://postgres:qwer5678@host.docker.internal:5432/testdb")
         return self.engine
 
     async def on_startup(self):
