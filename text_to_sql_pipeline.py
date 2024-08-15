@@ -72,7 +72,7 @@ class Pipeline:
         sql_database = SQLDatabase(self.engine, include_tables=[self.valves.DB_TABLE])
 
         # Set up LLM connection; uses phi3 model with 128k context limit since some queries have returned 20k+ tokens
-        llm = Ollama(model=self.valves.TEXT_TO_SQL_MODEL, base_url="http://host.docker.internal:11434", request_timeout=180.0, context_window=30000)
+        llm = Ollama(model="llama3.1:latest", base_url="http://host.docker.internal:11434", request_timeout=180.0, context_window=30000)
 
         # Set up the custom prompt used when generating SQL queries from text
         text_to_sql_prompt = """
